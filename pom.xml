@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <!--higher versions will end up with  cannot access org.springframework.boot.SpringApplication
+        because of the older java version.
+        According to the Intellij vulnerability check, this version has vulnerability issues.
+        Normally I would exclude the libraries that are causing the issues, and replace them with the latest version.
+        In the sake of time, I will just use the older version.
+        The libraries that are causing the issues are:
+            maven:org.springframework.boot:spring-boot:2.2.2.RELEASE
+            maven:net.minidev:json-smart:2.3
+            maven:ch.qos.logback:logback-core:1.2.3
+            maven:org.springframework:spring-webmvc:5.2.2.RELEASE
+            maven:org.apache.tomcat.embed:tomcat-embed-core:9.0.29
+            maven:org.springframework.boot:spring-boot-autoconfigure:2.2.2.RELEASE
+            maven:org.hibernate:hibernate-core:5.4.9.Final
+            maven:org.springframework.security:spring-security-web:5.2.1.RELEASE
+            maven:com.fasterxml.jackson.core:jackson-databind:2.10.1
+            maven:org.dom4j:dom4j:2.1.1
+            maven:org.springframework:spring-web:5.2.2.RELEASE
+            maven:org.apache.tomcat.embed:tomcat-embed-websocket:9.0.29
+            maven:ch.qos.logback:logback-classic:1.2.3
+        -->
+        <version>2.7.18</version>
+        <relativePath/>
+    </parent>
+    <groupId>com.human.interference.employee</groupId>
+    <artifactId>employee-service</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>employee-service</name>
+    <description>employee-service</description>
+    <url/>
+    <licenses>
+        <license/>
+    </licenses>
+    <developers>
+        <developer/>
+    </developers>
+    <scm>
+        <connection/>
+        <developerConnection/>
+        <tag/>
+        <url/>
+    </scm>
+    <properties>
+        <java.version>11</java.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <!--
+            I choose for the spring-boot-starter-web dependency because it is the most common dependency for a web application.
+            There are no signs in the assignemt that we need to use spring-boot-starter-webflux.
+            -->
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <version>3.1.8</version>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.5</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>1.19.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>1.19.0</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.12.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
