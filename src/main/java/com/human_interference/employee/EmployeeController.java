@@ -4,6 +4,7 @@ import com.human_interference.employee.data.EmployementStatus;
 import com.human_interference.employee.models.EmployeeModel;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class EmployeeController {
 
     //Create
     @PostMapping("/add")
-    public void addEmployee(@RequestBody EmployeeModel employeeModel) {
+    public void addEmployee(@RequestBody @Valid EmployeeModel employeeModel) {
         employeeService.addEmployee(employeeModel);
     }
 
@@ -31,7 +32,7 @@ public class EmployeeController {
 
     //Update
     @PutMapping("/update")
-    public void updateEmployee(@RequestBody EmployeeModel employeeModel) {
+    public void updateEmployee(@RequestBody @Valid EmployeeModel employeeModel) {
         employeeService.updateEmployee(employeeModel);
     }
 
