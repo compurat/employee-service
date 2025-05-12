@@ -1,6 +1,7 @@
 package com.human_interference;
 
 import com.human_interference.employee.EmployeeController;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -165,6 +166,7 @@ public class EmployeeServiceApplicationTests {
         jdbcTemplate.execute("SELECT setval('department_id_seq', COALESCE((SELECT MAX(id) FROM department), 0) + 1, false)");
     }
 
+    @AfterAll
     public static void closeContainer() {
         postgreSQLContainer.stop();
     }
