@@ -1,7 +1,7 @@
-# Getting Started
+`# Getting Started
 I used a .env file with vars on my local machine to hide the database credentials.
 The .env file is not included in the project.
-create a .env file in the root of the project with the following content:
+create a .env file src/main/docker of the project with the following content:
 DB_USERNAME=<username>
 DB_PASSWORD=<password>
 
@@ -15,7 +15,7 @@ Docker-compose has a build-in support for the .env file.
 run the docker-compose start -d under the folder src/main/docker
 to start the database.
 
-Then build teh project with mvn clean install
+Then build the project with mvn clean install
 Then run the project with ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
 Then open the browser and go to http://localhost:8080/api/v1/employee
 /api/v1/employee/add (with an employeeModel object in the body)
@@ -48,3 +48,4 @@ parent.
 To prevent this, the project POM contains empty overrides for these elements.
 If you manually switch to a different parent and actually want the inheritance, you need to remove those overrides.
 
+`

@@ -20,7 +20,6 @@ public class EmployeeService {
         this.departmentRepository = departmentRepository;
     }
 
-
     public void addEmployee(EmployeeModel employeeModel) {
         if (!employeeRepository.existsByEmail(employeeModel.getEmail())) {
             Employee employee = this.employeeMapper.employeeModelToEmployee(employeeModel);
