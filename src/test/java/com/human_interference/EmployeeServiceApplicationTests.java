@@ -1,6 +1,11 @@
 package com.human_interference;
 
 import com.human_interference.employee.EmployeeController;
+import com.human_interference.employee.data.Department;
+import com.human_interference.employee.data.DepartmentRepository;
+import com.human_interference.employee.data.Employee;
+import com.human_interference.employee.data.EmployeeRepository;
+import com.human_interference.employee.data.EmployementStatus;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -8,11 +13,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -23,15 +26,14 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("test")
@@ -41,7 +43,11 @@ public class EmployeeServiceApplicationTests {
     private MockMvc mockMvc;
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
+    @Autowired
+    private DepartmentRepository departmentRepository;
     @Autowired
     private EmployeeController employeeController;
     @Container
@@ -59,17 +65,28 @@ public class EmployeeServiceApplicationTests {
     public void init() {
         MockMvcBuilder mockMvcBuilder = MockMvcBuilders.standaloneSetup(employeeController);
         this.mockMvc = mockMvcBuilder.build();
-        // Check if the database is empty and populate it if necessary
-        List<Map<String, Object>> dbContent = jdbcTemplate.queryForList("select * from employee", new Object[]{});
-        if (dbContent.isEmpty()) {
-            ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-            populator.addScript(new ClassPathResource("data.sql"));
-            if (Objects.nonNull(jdbcTemplate.getDataSource())) {
-                populator.execute(jdbcTemplate.getDataSource());
-            } else {
-                throw new IllegalStateException("DataSource is null");
-            }
-        }
+        // Database leegmaken en vullen met testdata via Repository (geen SQL scripts nodig)
+        employeeRepository.deleteAll();
+        departmentRepository.deleteAll();
+
+        Department it = new Department();
+        it.setName("IT");
+        it.setDescription("Information Technology");
+        it.setPhoneNumber("1234567890");
+        departmentRepository.save(it);
+
+        Employee employee = new Employee();
+        employee.setFirstName("Pete");
+        employee.setName("Parker");
+        employee.setEmail("pete.parker@test.com");
+        employee.setPhoneNumber("9876543210");
+        employee.setAddress("456 Elm St");
+        employee.setSalary(60000.0f);
+        employee.setStatus(EmployementStatus.ACTIVE);
+        employee.setStartDate(LocalDate.of(2023, 1, 1));
+        employee.setEndDate(LocalDate.of(2023, 12, 31));
+        employee.setDepartment(it);
+        employeeRepository.save(employee);
     }
 
     @DynamicPropertySource
@@ -157,14 +174,6 @@ public class EmployeeServiceApplicationTests {
                 .andExpect(status().isOk());
     }
 
-    @AfterEach
-    public void destroyAll() {
-        // Clean up the database after each test
-        jdbcTemplate.execute("TRUNCATE TABLE employee RESTART IDENTITY CASCADE");
-        jdbcTemplate.execute("TRUNCATE TABLE department RESTART IDENTITY CASCADE");
-        jdbcTemplate.execute("ALTER SEQUENCE department_id_seq RESTART WITH 1"); // Reset sequence explicitly
-        jdbcTemplate.execute("SELECT setval('department_id_seq', COALESCE((SELECT MAX(id) FROM department), 0) + 1, false)");
-    }
 
     @AfterAll
     public static void closeContainer() {
