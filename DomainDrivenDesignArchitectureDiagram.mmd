@@ -1,0 +1,33 @@
+graph TD
+    subgraph Buitenwereld [Gebruikers]
+        Browser[Frontend / Client]
+    end
+
+    subgraph Hexagon [De Applicatie]
+    
+        subgraph Adapters [Buitenste Schil: Adapters]
+            direction TB
+            WebAdapter["<b>Web Adapter</b><br/><i>(EmployeeController)</i><br/><br/><b>Spring Validation</b><br/>@Valid DTO's"]
+        end
+
+        subgraph Ports [Middelste Schil: Ports]
+            InPort["<b>Input Port</b><br/><i>(EmployeeService Interface)</i>"]
+            OutPort["<b>Output Port</b><br/><i>(DepartmentRepository)</i>"]
+        end
+
+        subgraph Core [Binnenste Schil: Domein Core]
+            DomainModel["<b>Domein Modellen</b><br/><i>(Department, Employee)</i><br/><br/>Business Regels<br/>(Geen Spring afhankelijkheid)"]
+        end
+    end
+
+    %% Relaties
+    Browser -->|JSON| WebAdapter
+    WebAdapter -->|Valideert & Mapt| InPort
+    InPort --> DomainModel
+
+    DomainModel --> OutPort
+
+    %% Kleuren
+    style DomainModel fill:#f9f,stroke:#333,stroke-width:2px
+    style WebAdapter fill:#bbf,stroke:#333,stroke-width:2px
+    style Core fill:#fff,stroke-dasharray: 5 5
