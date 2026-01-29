@@ -47,8 +47,6 @@ public class EmployeeServiceH2ApplicationTests {
         employeeRepository.deleteAll();
         departmentRepository.deleteAll();
 
-
-
         Department it = new Department();
         it.setName("IT");
         it.setDescription("Information Technology");
